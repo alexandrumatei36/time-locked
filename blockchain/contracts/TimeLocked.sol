@@ -12,8 +12,9 @@ contract TimeLocked is Ownable {
     }
 
     mapping(address => mapping(address => Deposit)) public deposits;
+    address forwarder;
 
-    function deposit(address tokenAddress, address unlocker, uint256 amount, uint unlockTimestamp) public onlyOwner {
+    function deposit(address tokenAddress, address unlocker, uint256 amount, uint unlockTimestamp) external onlyOwner {
         require(amount > 0, "Amount must be > 0");
 
         IERC20 token = IERC20(tokenAddress);
@@ -25,13 +26,32 @@ contract TimeLocked is Ownable {
         token.transferFrom(msg.sender, address(this), amount);
     }
 
-    function claim(address tokenAddress) public {
-        Deposit storage d = deposits[msg.sender][tokenAddress];
+    function claim(address tokenAddress) external {
+        address sender = _sender();
+        Deposit storage d = deposits[sender][tokenAddress];
         require(d.token != address(0), "No funds to claim");
         require(block.timestamp > d.unlockTimestamp, "Can't claim locked tokens");
         uint256 amount = d.amount;
-        delete deposits[msg.sender][tokenAddress];
+        delete deposits[sender][tokenAddress];
         IERC20 token = IERC20(tokenAddress);
-        token.transfer(msg.sender, amount);
+        token.transfer(sender, amount);
+    }
+
+    function setForwarder(address forwarderAddress) external onlyOwner {
+        forwarder = forwarderAddress;
+    }
+
+    function isTrustedForwarder(address forwarderAddress) public view returns(bool) {
+        return forwarderAddress == forwarder;
+    }
+
+    function _sender() internal view returns (address signer) {
+        signer = msg.sender;
+
+        if (msg.data.length >= 20 && isTrustedForwarder(msg.sender)) {
+            assembly {
+                signer := shr(96, calldataload(sub(calldatasize(), 20)))
+            }
+        }
     }
 }
