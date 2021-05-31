@@ -70,6 +70,7 @@ export function Lock(props: Props) {
       )
       await result.wait()
       setLocking(false);
+      setClaimer('')
     } catch (error) {
       setLocking(false);
       props.onError('Failed to lock tokens')
