@@ -15,7 +15,7 @@ function Alert(props: AlertProps) {
 }
 
 export function TimeLocked() {
-  const { ethereum } = useContext(EthereumContext);
+  const { ethereum, chainId } = useContext(EthereumContext);
   const [error, setError] = useState('');
   const [tokens, setTokens] = useState<Token[]>([]);
 
@@ -28,13 +28,20 @@ export function TimeLocked() {
     setTokens(getTokens())
   }, [])
 
+  function onAddToken() {
+    setTokens(getTokens())
+  }
 
   if (!ethereum) {
     return null;
   }
 
-  function onAddToken() {
-    setTokens(getTokens())
+  if (chainId !== '0x2a') {
+    return (
+      <div className="App" style={{ width: "100%", display: "flex", justifyContent: "center", height: "100vh", alignItems: "center" }}>
+        Switch to Kovan tesnet
+      </div>
+    )
   }
 
   return (

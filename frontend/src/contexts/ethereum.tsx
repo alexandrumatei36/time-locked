@@ -4,7 +4,7 @@ export const EthereumContext = React.createContext({
     address: '',
     connect: () => {},
     chainId: '',
-    ethereum: '',
+    ethereum: undefined,
   }
 );
 
