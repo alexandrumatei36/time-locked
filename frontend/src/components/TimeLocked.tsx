@@ -15,7 +15,7 @@ function Alert(props: AlertProps) {
 }
 
 export function TimeLocked() {
-  const { ethereum, chainId } = useContext(EthereumContext);
+  const { ethereum, chainId, address } = useContext(EthereumContext);
   const [error, setError] = useState('');
   const [tokens, setTokens] = useState<Token[]>([]);
 
@@ -36,25 +36,23 @@ export function TimeLocked() {
     return null;
   }
 
-  if (chainId !== '0x2a') {
-    return (
-      <div className="App" style={{ width: "100%", display: "flex", justifyContent: "center", height: "100vh", alignItems: "center" }}>
-        Switch to Kovan tesnet
-      </div>
-    )
-  }
-
   return (
     <div className="App">
       <Header />
-      <Container maxWidth="sm" style={{ padding: '32px 0'}}>
-        <Snackbar open={!!error}>
-          <Alert severity="error">{error}</Alert>
-        </Snackbar>
-        <AddToken onAddToken={onAddToken} onError={onError} />
-        <Lock tokens={tokens} onError={onError} />
-        <Unlock tokens={tokens} onError={onError} />
-      </Container>
+      {!!address && chainId !== '0x2a' ? (
+        <div className="App" style={{ width: "100%", display: "flex", justifyContent: "center", height: "100vh", alignItems: "center" }}>
+          Switch to Kovan tesnet
+        </div>
+      ) : (
+        <Container maxWidth="sm" style={{ padding: '32px 0'}}>
+          <Snackbar open={!!error}>
+            <Alert severity="error">{error}</Alert>
+          </Snackbar>
+          <AddToken onAddToken={onAddToken} onError={onError} />
+          <Lock tokens={tokens} onError={onError} />
+          <Unlock tokens={tokens} onError={onError} />
+        </Container>
+      )}
     </div>
   )
 }

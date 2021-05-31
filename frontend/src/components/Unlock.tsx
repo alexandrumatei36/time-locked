@@ -41,6 +41,7 @@ export function Unlock(props: Props) {
       const result = await erc20Contract.connect(signer).claim(unlockToken)
       await result.wait()
       setUnlocking(false)
+      setBalanceToUnlock('')
     } catch {
       setUnlocking(false)
       props.onError('Failed to unlock tokens')

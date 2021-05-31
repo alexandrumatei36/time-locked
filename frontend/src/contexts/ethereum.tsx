@@ -17,25 +17,25 @@ export function EthereumProvider(props: Props) {
   const [ethereum, setEthereum] = useState<any>();
 
   useEffect(() => {
-    const ethereum = (window as any).ethereum;
+    const eth = (window as any).ethereum;
 
-    if (ethereum) {
-      ethereum.on('accountsChanged', function (accounts: any) {
+    if (eth) {
+      eth.on('accountsChanged', function (accounts: any) {
         if (address !== accounts[0]) {
           setAddress(accounts[0])
           localStorage.setItem('account', accounts[0]);
         }
       });
 
-      ethereum.on('disconnect', () => {
+      eth.on('disconnect', () => {
         setAddress('')
         localStorage.removeItem('account')
       });
 
-      ethereum.on('chainChanged', (chainId: string) => {
+      eth.on('chainChanged', (chainId: string) => {
         setChainId(chainId)
       });
-      setEthereum(ethereum);
+      setEthereum(eth);
     }
   }, [])
 

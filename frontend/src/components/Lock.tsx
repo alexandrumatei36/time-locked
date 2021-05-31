@@ -48,6 +48,7 @@ export function Lock(props: Props) {
         const amount = ethers.BigNumber.from(2).pow(256).sub(1).toString();
         const result = await erc20Contract.connect(signer).approve(contract, amount)
         await result.wait()
+        await checkAllowance()
         setApproving(false)
       }
     } catch {
