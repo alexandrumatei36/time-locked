@@ -2,6 +2,8 @@
   "name": "hardhat-project",
   "scripts": {
     "compile": "rm -rf artifacts && hardhat compile",
+    "deploy": "hardhat run ./scripts/deploy.ts --network kovan",
+    "deploy-token": "hardhat run ./scripts/deploy-token.ts --network kovan",
     "test": "hardhat test"
   },
   "devDependencies": {
