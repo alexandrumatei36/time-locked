@@ -1,3 +1,3 @@
 # time-locked
 
-Demo app for locking tokens
+Demo app for locking tokens in a smart contract
